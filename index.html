@@ -592,9 +592,23 @@
                     name: user.name,
                     exp: Date.now() + (24 * 60 * 60 * 1000) // 24시간
                 };
-                // 한글 문자를 안전하게 인코딩
-                const jsonString = JSON.stringify(tokenData);
-                return btoa(unescape(encodeURIComponent(jsonString)));
+                // 한글 문자를 안전하게 인코딩 (더 안전한 방법)
+                try {
+                    const jsonString = JSON.stringify(tokenData);
+                    const encodedString = encodeURIComponent(jsonString);
+                    return btoa(encodedString);
+                } catch (error) {
+                    console.error('토큰 생성 오류:', error);
+                    // 대체 방법: 한글을 제거하고 생성
+                    const safeTokenData = {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        name: user.username, // 한글 이름 대신 username 사용
+                        exp: Date.now() + (24 * 60 * 60 * 1000)
+                    };
+                    return btoa(JSON.stringify(safeTokenData));
+                }
             }
 
             setToken(token) {
@@ -614,14 +628,25 @@
                 if (!token) return null;
 
                 try {
-                    // 한글 문자를 안전하게 디코딩
-                    const decodedString = decodeURIComponent(escape(atob(token)));
-                    const tokenData = JSON.parse(decodedString);
+                    // 한글 문자를 안전하게 디코딩 (더 안전한 방법)
+                    const decodedString = atob(token);
+                    const jsonString = decodeURIComponent(decodedString);
+                    const tokenData = JSON.parse(jsonString);
                     if (tokenData.exp > Date.now()) {
                         return tokenData;
                     }
                 } catch (error) {
                     console.error('토큰 파싱 오류:', error);
+                    // 대체 방법: 직접 파싱 시도
+                    try {
+                        const decodedString = atob(token);
+                        const tokenData = JSON.parse(decodedString);
+                        if (tokenData.exp > Date.now()) {
+                            return tokenData;
+                        }
+                    } catch (fallbackError) {
+                        console.error('대체 토큰 파싱도 실패:', fallbackError);
+                    }
                 }
                 
                 return null;
