@@ -592,7 +592,9 @@
                     name: user.name,
                     exp: Date.now() + (24 * 60 * 60 * 1000) // 24시간
                 };
-                return btoa(JSON.stringify(tokenData));
+                // 한글 문자를 안전하게 인코딩
+                const jsonString = JSON.stringify(tokenData);
+                return btoa(unescape(encodeURIComponent(jsonString)));
             }
 
             setToken(token) {
@@ -612,7 +614,9 @@
                 if (!token) return null;
 
                 try {
-                    const tokenData = JSON.parse(atob(token));
+                    // 한글 문자를 안전하게 디코딩
+                    const decodedString = decodeURIComponent(escape(atob(token)));
+                    const tokenData = JSON.parse(decodedString);
                     if (tokenData.exp > Date.now()) {
                         return tokenData;
                     }
