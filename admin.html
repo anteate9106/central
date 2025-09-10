@@ -690,7 +690,89 @@
         </div>
     </div>
 
-    <!-- JavaScript는 별도 파일로 분리 -->
-    <script src="js/admin.js"></script>
+    <!-- JavaScript 인라인 포함 -->
+    <script>
+        // 간단한 관리자 페이지 JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // 관리자 권한 확인
+            checkAdminAuth();
+            
+            // 탭 전환 이벤트
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    showTab(tabName);
+                });
+            });
+        });
+
+        function checkAdminAuth() {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
+                alert('관리자 권한이 필요합니다.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                const decodedString = atob(token);
+                const jsonString = decodeURIComponent(decodedString);
+                const tokenData = JSON.parse(jsonString);
+                
+                if (tokenData.username !== 'admin') {
+                    alert('관리자 권한이 필요합니다.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // 관리자 정보 표시
+                document.getElementById('adminName').textContent = tokenData.name || tokenData.username;
+            } catch (error) {
+                alert('관리자 권한이 필요합니다.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showTab(tabName) {
+            // 모든 탭 버튼과 콘텐츠 비활성화
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            const activeContent = document.getElementById(`${tabName}-tab`);
+            
+            if (activeButton) activeButton.classList.add('active');
+            if (activeContent) activeContent.classList.add('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('supabase_token');
+            window.location.href = 'index.html';
+        }
+
+        function showAddUserModal() {
+            alert('사용자 추가 기능은 Supabase 데이터베이스 설정 후 사용 가능합니다.');
+        }
+
+        function showAddQuestionModal() {
+            alert('문항 추가 기능은 Supabase 데이터베이스 설정 후 사용 가능합니다.');
+        }
+
+        function exportResults() {
+            alert('결과 내보내기 기능은 Supabase 데이터베이스 설정 후 사용 가능합니다.');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 전역 함수로 노출
+        window.showAddUserModal = showAddUserModal;
+        window.showAddQuestionModal = showAddQuestionModal;
+        window.exportResults = exportResults;
+        window.closeModal = closeModal;
+        window.logout = logout;
+    </script>
 </body>
 </html>
