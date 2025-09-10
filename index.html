@@ -770,8 +770,12 @@
                 
                 if (result && result.access_token) {
                     currentUser = result.user;
-                    showUserInterface();
-                    showAlert('로그인에 성공했습니다!', 'success');
+                    showAlert('로그인에 성공했습니다! 잠시 후 사용자 페이지로 이동합니다.', 'success');
+                    
+                    // 2초 후 사용자 페이지로 리다이렉트
+                    setTimeout(() => {
+                        window.location.href = 'user.html';
+                    }, 2000);
                 } else {
                     showAlert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.', 'danger');
                 }

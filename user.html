@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성격유형 검사 - 사용자 페이지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .user-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #4facfe;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+
+        .tab-container {
+            margin-top: 30px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #4facfe;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .test-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e1e5e9;
+        }
+
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 2px solid #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .question-card:hover {
+            border-color: #4facfe;
+            transform: translateY(-2px);
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        .answer-option {
+            text-align: center;
+            padding: 20px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .answer-option:hover {
+            border-color: #4facfe;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .answer-option.selected {
+            border-color: #4facfe;
+            background: #4facfe;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .result-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .personality-type {
+            font-size: 3em;
+            font-weight: bold;
+            color: #4facfe;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dimension-result {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dimension {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e1e5e9;
+        }
+
+        .dimension-label {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .dimension-value {
+            font-size: 2em;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            font-weight: 500;
+            border: 2px solid;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .profile-info {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-value {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .answer-options {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .dimension-result {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .user-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <div class="logo-text">성격유형검사</div>
+            </div>
+            <div class="user-info">
+                <div class="welcome-text">안녕하세요!</div>
+                <div class="user-name" id="userName">사용자</div>
+                <button onclick="logout()" class="logout-btn">로그아웃</button>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <h1 class="page-title">성격유형 검사 시스템</h1>
+            <p class="page-subtitle">당신의 성격유형을 알아보세요</p>
+            
+            <!-- 탭 컨테이너 -->
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="test">성격유형 검사</button>
+                    <button class="tab-button" data-tab="results">검사 결과</button>
+                    <button class="tab-button" data-tab="profile">프로필</button>
+                </div>
+                
+                <!-- 성격유형 검사 탭 -->
+                <div id="test-tab" class="tab-content active">
+                    <div class="test-container">
+                        <h2>MBTI 성격유형 검사</h2>
+                        <p>총 16개의 질문에 답해주세요. 각 질문에 대해 가장 적절한 답을 선택해주세요.</p>
+                        
+                        <div id="test-questions">
+                            <!-- 질문들이 여기에 동적으로 로드됩니다 -->
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button class="btn btn-success" onclick="calculateResult()">검사 완료</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 검사 결과 탭 -->
+                <div id="results-tab" class="tab-content">
+                    <h2>나의 검사 결과</h2>
+                    <div id="test-result" class="hidden">
+                        <div class="result-card">
+                            <div class="personality-type" id="personality-type"></div>
+                            <div class="dimension-result" id="dimension-result"></div>
+                            <div class="text-center">
+                                <button class="btn btn-success" onclick="saveResult()">결과 저장</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="saved-results">
+                        <!-- 저장된 결과들이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+                
+                <!-- 프로필 탭 -->
+                <div id="profile-tab" class="tab-content">
+                    <div class="profile-info">
+                        <h2>프로필 정보</h2>
+                        <div id="profile-details">
+                            <!-- 프로필 정보가 여기에 표시됩니다 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 전역 변수
+        let currentAnswers = {};
+        let currentResult = null;
+        let currentUser = null;
+
+        // Supabase 클라이언트
+        class SimpleSupabaseClient {
+            constructor() {
+                this.url = 'https://lghwdvpnbvkihzgvwzpz.supabase.co';
+                this.anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnaHdkdnBuYnZraWh6Z3Z3enB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTM5ODksImV4cCI6MjA3MzA2OTk4OX0.7ae1Cz706NOThj8lbJAfbHZW7nYWng8aZ4RJ9EDujMs';
+                this.headers = {
+                    'Content-Type': 'application/json',
+                    'apikey': this.anonKey,
+                    'Authorization': `Bearer ${this.anonKey}`
+                };
+            }
+
+            async request(endpoint, method = 'GET', data = null) {
+                const url = `${this.url}/rest/v1/${endpoint}`;
+                
+                const options = {
+                    method: method,
+                    headers: this.headers
+                };
+
+                if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
+                    options.body = JSON.stringify(data);
+                }
+
+                try {
+                    const response = await fetch(url, options);
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.message || 'API 요청 실패');
+                    }
+                    
+                    return result;
+                } catch (error) {
+                    console.error('Supabase API 오류:', error);
+                    throw error;
+                }
+            }
+
+            async getQuestions() {
+                return await this.request('questions?is_active=eq.true');
+            }
+
+            removeToken() {
+                localStorage.removeItem('supabase_token');
+            }
+
+            isLoggedIn() {
+                return !!localStorage.getItem('supabase_token');
+            }
+
+            async getCurrentUser() {
+                const token = localStorage.getItem('supabase_token');
+                if (!token) return null;
+
+                try {
+                    const decodedString = atob(token);
+                    const jsonString = decodeURIComponent(decodedString);
+                    const tokenData = JSON.parse(jsonString);
+                    if (tokenData.exp > Date.now()) {
+                        return tokenData;
+                    }
+                } catch (error) {
+                    console.error('토큰 파싱 오류:', error);
+                    try {
+                        const decodedString = atob(token);
+                        const tokenData = JSON.parse(decodedString);
+                        if (tokenData.exp > Date.now()) {
+                            return tokenData;
+                        }
+                    } catch (fallbackError) {
+                        console.error('대체 토큰 파싱도 실패:', fallbackError);
+                    }
+                }
+                
+                return null;
+            }
+        }
+
+        // 전역 인스턴스 생성
+        window.supabase = new SimpleSupabaseClient();
+
+        // DOM 로드 완료 후 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        // 앱 초기화
+        function initializeApp() {
+            // 사용자 로그인 상태 확인
+            checkLoginStatus();
+            
+            // 이벤트 리스너 등록
+            setupEventListeners();
+            
+            // 질문 로드
+            loadQuestions();
+        }
+
+        // 로그인 상태 확인
+        async function checkLoginStatus() {
+            try {
+                if (window.supabase && window.supabase.isLoggedIn()) {
+                    currentUser = await window.supabase.getCurrentUser();
+                    if (currentUser) {
+                        showUserInfo();
+                        loadProfile();
+                    } else {
+                        redirectToLogin();
+                    }
+                } else {
+                    redirectToLogin();
+                }
+            } catch (error) {
+                console.error('로그인 상태 확인 오류:', error);
+                redirectToLogin();
+            }
+        }
+
+        // 사용자 정보 표시
+        function showUserInfo() {
+            const userName = document.getElementById('userName');
+            if (userName && currentUser) {
+                userName.textContent = currentUser.name || currentUser.username;
+            }
+        }
+
+        // 프로필 로드
+        function loadProfile() {
+            const profileDetails = document.getElementById('profile-details');
+            if (profileDetails && currentUser) {
+                profileDetails.innerHTML = `
+                    <div class="info-item">
+                        <span class="info-label">아이디:</span>
+                        <span class="info-value">${currentUser.username}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">이름:</span>
+                        <span class="info-value">${currentUser.name || currentUser.username}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">이메일:</span>
+                        <span class="info-value">${currentUser.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">가입일:</span>
+                        <span class="info-value">${new Date().toLocaleDateString('ko-KR')}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 답변 선택
+            setupAnswerListeners();
+            
+            // 탭 전환
+            setupTabListeners();
+        }
+
+        // 답변 선택 이벤트 리스너
+        function setupAnswerListeners() {
+            const answerOptions = document.querySelectorAll('.answer-option');
+            answerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionCard = this.closest('.question-card');
+                    const questionNum = questionCard.dataset.question;
+                    const dimension = questionCard.dataset.dimension;
+                    
+                    // 같은 질문의 다른 옵션들 해제
+                    questionCard.querySelectorAll('.answer-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // 선택된 옵션 활성화
+                    this.classList.add('selected');
+                    
+                    // 답변 저장
+                    currentAnswers[questionNum] = {
+                        value: parseInt(this.dataset.value),
+                        dimension: dimension
+                    };
+                });
+            });
+        }
+
+        // 탭 전환 이벤트 리스너
+        function setupTabListeners() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    showTab(tabName);
+                });
+            });
+        }
+
+        // 질문 로드
+        async function loadQuestions() {
+            try {
+                if (window.supabase) {
+                    const questions = await window.supabase.getQuestions();
+                    displayQuestions(questions);
+                }
+            } catch (error) {
+                console.error('질문 로드 오류:', error);
+                showAlert('질문을 불러오는 중 오류가 발생했습니다.', 'danger');
+            }
+        }
+
+        // 질문 표시
+        function displayQuestions(questions) {
+            const container = document.getElementById('test-questions');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.dataset.question = index + 1;
+                questionCard.dataset.dimension = question.dimension;
+                
+                questionCard.innerHTML = `
+                    <div class="question-text">
+                        <strong>${index + 1}.</strong> ${question.question_text}
+                    </div>
+                    <div class="answer-options">
+                        <div class="answer-option" data-value="1">전혀 그렇지 않다</div>
+                        <div class="answer-option" data-value="2">그렇지 않다</div>
+                        <div class="answer-option" data-value="3">보통이다</div>
+                        <div class="answer-option" data-value="4">그렇다</div>
+                        <div class="answer-option" data-value="5">매우 그렇다</div>
+                    </div>
+                `;
+                
+                container.appendChild(questionCard);
+            });
+            
+            // 답변 선택 이벤트 리스너 재설정
+            setupAnswerListeners();
+        }
+
+        // 결과 계산
+        function calculateResult() {
+            // 모든 질문에 답했는지 확인
+            const totalQuestions = document.querySelectorAll('.question-card').length;
+            if (Object.keys(currentAnswers).length < totalQuestions) {
+                showAlert('모든 질문에 답해주세요.', 'warning');
+                return;
+            }
+            
+            // 점수 계산
+            const scores = {
+                'E': 0, 'I': 0,
+                'S': 0, 'N': 0,
+                'T': 0, 'F': 0,
+                'J': 0, 'P': 0
+            };
+            
+            Object.values(currentAnswers).forEach(answer => {
+                const dimension = answer.dimension;
+                const value = answer.value;
+                
+                if (dimension === 'EI') {
+                    scores['E'] += value;
+                } else if (dimension === 'SN') {
+                    scores['S'] += value;
+                } else if (dimension === 'TF') {
+                    scores['T'] += value;
+                } else if (dimension === 'JP') {
+                    scores['J'] += value;
+                }
+            });
+            
+            // MBTI 타입 결정
+            const mbtiType = 
+                (scores['E'] > scores['I'] ? 'E' : 'I') +
+                (scores['S'] > scores['N'] ? 'S' : 'N') +
+                (scores['T'] > scores['F'] ? 'T' : 'F') +
+                (scores['J'] > scores['P'] ? 'J' : 'P');
+            
+            // 결과 저장
+            currentResult = {
+                type: mbtiType,
+                scores: scores
+            };
+            
+            // 결과 표시
+            displayResult(mbtiType, scores);
+            showTab('results');
+        }
+
+        // 결과 표시
+        function displayResult(mbtiType, scores) {
+            const personalityType = document.getElementById('personality-type');
+            const dimensionResult = document.getElementById('dimension-result');
+            
+            if (personalityType) {
+                personalityType.textContent = mbtiType;
+            }
+            
+            if (dimensionResult) {
+                dimensionResult.innerHTML = `
+                    <div class="dimension">
+                        <div class="dimension-label">외향/내향</div>
+                        <div class="dimension-value">${scores['E'] > scores['I'] ? 'E' : 'I'}</div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-label">감각/직관</div>
+                        <div class="dimension-value">${scores['S'] > scores['N'] ? 'S' : 'N'}</div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-label">사고/감정</div>
+                        <div class="dimension-value">${scores['T'] > scores['F'] ? 'T' : 'F'}</div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-label">판단/인식</div>
+                        <div class="dimension-value">${scores['J'] > scores['P'] ? 'J' : 'P'}</div>
+                    </div>
+                `;
+            }
+            
+            const testResult = document.getElementById('test-result');
+            if (testResult) {
+                testResult.classList.remove('hidden');
+            }
+        }
+
+        // 결과 저장
+        function saveResult() {
+            if (!currentResult) {
+                showAlert('저장할 결과가 없습니다.', 'warning');
+                return;
+            }
+            
+            showAlert('검사 결과가 저장되었습니다!', 'success');
+        }
+
+        // 탭 전환
+        function showTab(tabName) {
+            // 모든 탭 버튼과 콘텐츠 비활성화
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            const activeContent = document.getElementById(`${tabName}-tab`);
+            
+            if (activeButton) activeButton.classList.add('active');
+            if (activeContent) activeContent.classList.add('active');
+        }
+
+        // 로그아웃
+        function logout() {
+            if (window.supabase) {
+                window.supabase.removeToken();
+            }
+            
+            currentUser = null;
+            currentAnswers = {};
+            currentResult = null;
+            
+            redirectToLogin();
+        }
+
+        // 로그인 페이지로 리다이렉트
+        function redirectToLogin() {
+            window.location.href = 'index.html';
+        }
+
+        // 알림 표시
+        function showAlert(message, type = 'info') {
+            // 기존 알림 제거
+            const existingAlert = document.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // 새 알림 생성
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            // 페이지 상단에 추가
+            const container = document.querySelector('.main-content');
+            if (container) {
+                container.insertBefore(alert, container.firstChild);
+                
+                // 3초 후 자동 제거
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 3000);
+            }
+        }
+
+        // 전역 함수로 노출
+        window.calculateResult = calculateResult;
+        window.saveResult = saveResult;
+        window.showTab = showTab;
+        window.logout = logout;
+    </script>
+</body>
+</html>
