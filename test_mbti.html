@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBTI 성격유형 검사 - 청년들 성격유형 검사 시스템</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* MBTI 검사 전용 스타일 */
@@ -358,19 +359,36 @@
         // 테스트 초기화
         async function initializeTest() {
             try {
+                console.log('테스트 초기화 시작');
+                
                 // 사용자 정보 확인
-                if (window.supabase && window.supabase.isLoggedIn()) {
-                    currentUser = await window.supabase.getCurrentUser();
-                    if (!currentUser) {
+                if (window.supabase) {
+                    console.log('Supabase 클라이언트 로드됨');
+                    const isLoggedIn = window.supabase.isLoggedIn();
+                    console.log('로그인 상태:', isLoggedIn);
+                    
+                    if (isLoggedIn) {
+                        currentUser = await window.supabase.getCurrentUser();
+                        console.log('현재 사용자:', currentUser);
+                        
+                        if (!currentUser) {
+                            console.log('사용자 정보 없음, 로그인 페이지로 이동');
+                            redirectToLogin();
+                            return;
+                        }
+                    } else {
+                        console.log('로그인되지 않음, 로그인 페이지로 이동');
                         redirectToLogin();
                         return;
                     }
                 } else {
+                    console.log('Supabase 클라이언트 없음, 로그인 페이지로 이동');
                     redirectToLogin();
                     return;
                 }
 
                 // 첫 번째 질문 표시
+                console.log('첫 번째 질문 표시');
                 showQuestion(0);
             } catch (error) {
                 console.error('테스트 초기화 오류:', error);
@@ -380,7 +398,13 @@
 
         // 질문 표시
         function showQuestion(questionIndex) {
+            console.log('질문 표시:', questionIndex, '총 질문 수:', mbtiQuestions.length);
             const question = mbtiQuestions[questionIndex];
+            
+            if (!question) {
+                console.error('질문을 찾을 수 없습니다:', questionIndex);
+                return;
+            }
             
             document.getElementById('questionNumber').textContent = questionIndex + 1;
             document.getElementById('questionText').textContent = question.question;
@@ -586,6 +610,12 @@
             showQuestion(0);
         }
 
+        // 로그인 페이지로 이동
+        function redirectToLogin() {
+            console.log('로그인 페이지로 이동');
+            window.location.href = 'index.html';
+        }
+
         // 로그아웃
         function logout() {
             if (window.supabase) {
@@ -594,10 +624,6 @@
             window.location.href = 'index.html';
         }
 
-        // 로그인 페이지로 리다이렉트
-        function redirectToLogin() {
-            window.location.href = 'index.html';
-        }
     </script>
 </body>
 </html>
