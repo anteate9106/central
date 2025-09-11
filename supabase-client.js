@@ -25,13 +25,30 @@ class SupabaseClient {
 
         try {
             const response = await fetch(url, options);
-            const result = await response.json();
             
             if (!response.ok) {
-                throw new Error(result.message || 'API 요청 실패');
+                const errorText = await response.text();
+                let errorMessage = 'API 요청 실패';
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message || errorMessage;
+                } catch (e) {
+                    errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
             
-            return result;
+            const responseText = await response.text();
+            if (!responseText) {
+                return null; // 빈 응답 처리
+            }
+            
+            try {
+                return JSON.parse(responseText);
+            } catch (e) {
+                console.warn('JSON 파싱 실패, 원본 텍스트 반환:', responseText);
+                return responseText;
+            }
         } catch (error) {
             console.error('Supabase API 오류:', error);
             throw error;
@@ -137,7 +154,8 @@ class SupabaseClient {
         } else if (password === 'admin123!') {
             return '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
         }
-        return btoa(password); // 다른 비밀번호는 Base64 인코딩
+        // UTF-8 인코딩 후 Base64 인코딩
+        return btoa(unescape(encodeURIComponent(password)));
     }
 
     // 비밀번호 확인
@@ -146,7 +164,7 @@ class SupabaseClient {
         if (password === 'test123!' || password === 'admin123!') {
             return hashedPassword === '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
         }
-        return btoa(password) === hashedPassword;
+        return btoa(unescape(encodeURIComponent(password))) === hashedPassword;
     }
 
     // 간단한 토큰 생성
@@ -158,7 +176,7 @@ class SupabaseClient {
             name: user.name,
             exp: Date.now() + (24 * 60 * 60 * 1000) // 24시간
         };
-        return btoa(JSON.stringify(tokenData));
+        return btoa(unescape(encodeURIComponent(JSON.stringify(tokenData))));
     }
 
     // 현재 사용자 정보 가져오기
