@@ -91,6 +91,13 @@
             transition: all 0.3s ease;
             background: white;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .answer-option:hover {
@@ -181,6 +188,12 @@
                 gap: 8px;
             }
             
+            .answer-option {
+                padding: 12px;
+                font-size: 0.9rem;
+                min-height: 45px;
+            }
+            
             .test-title {
                 font-size: 2rem;
             }
@@ -193,6 +206,19 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        @media (max-width: 480px) {
+            .answer-options {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            
+            .answer-option {
+                padding: 10px;
+                font-size: 0.8rem;
+                min-height: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -203,7 +229,10 @@
                 <div class="logo-icon">🧠</div>
                 <span class="logo-text">MBTI 검사</span>
             </a>
-            <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+            <div>
+                <a href="test_selection.html" class="btn btn-secondary btn-sm" style="margin-right: 10px;">검사 선택</a>
+                <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+            </div>
         </div>
 
         <!-- 테스트 헤더 -->

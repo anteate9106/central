@@ -470,6 +470,7 @@
                 <a href="index.html" class="back-button">← 메인으로 돌아가기</a>
                 <div>
                     <button class="btn btn-secondary" onclick="viewResults()">검사 결과 보기</button>
+                    <button class="btn btn-warning" onclick="testDirectAccess()" style="margin-left: 10px;">MBTI 직접 테스트</button>
                 </div>
             </div>
         </div>
@@ -566,24 +567,32 @@
 
         // 검사 시작
         function startTest(testType) {
+            console.log('startTest 함수 호출됨:', testType);
+            
             // 검사 타입에 따른 페이지로 이동
             switch(testType) {
                 case 'mbti':
+                    console.log('MBTI 검사 페이지로 이동');
                     window.location.href = 'test_mbti.html';
                     break;
                 case 'disc':
+                    console.log('DiSC 검사 페이지로 이동');
                     window.location.href = 'test_disc.html';
                     break;
                 case 'stress':
+                    console.log('스트레스 검사 페이지로 이동');
                     window.location.href = 'test_stress.html';
                     break;
                 case 'eq':
+                    console.log('EQ 검사 페이지로 이동');
                     window.location.href = 'test_eq.html';
                     break;
                 case 'leadership':
+                    console.log('리더십 검사 페이지로 이동');
                     window.location.href = 'test_leadership.html';
                     break;
                 case 'career':
+                    console.log('직업적성 검사 페이지로 이동');
                     window.location.href = 'test_career.html';
                     break;
                 default:
@@ -594,6 +603,13 @@
         // 검사 결과 보기
         function viewResults() {
             window.location.href = 'results.html';
+        }
+
+        // 직접 접근 테스트
+        function testDirectAccess() {
+            console.log('직접 접근 테스트 시작');
+            alert('MBTI 페이지로 직접 이동합니다.');
+            window.location.href = 'test_mbti.html';
         }
 
         // 로그아웃
