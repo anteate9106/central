@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감정지능(EQ) 검사 - 청년들 성격유형 검사 시스템</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* EQ 검사 전용 스타일 */
+        .test-header {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .test-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            background: #51cf66;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .answer-option:hover {
+            border-color: #51cf66;
+            background: #f0fff4;
+        }
+
+        .answer-option.selected {
+            border-color: #51cf66;
+            background: #51cf66;
+            color: white;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #51cf66;
+            color: #51cf66;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #51cf66;
+            color: white;
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .eq-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #51cf66;
+            margin-bottom: 20px;
+        }
+
+        .eq-description {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .eq-areas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .area-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .area-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .area-description {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .test-title {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="main-header">
+            <a href="test_selection.html" class="logo">
+                <div class="logo-icon">💝</div>
+                <span class="logo-text">EQ 검사</span>
+            </a>
+            <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+        </div>
+
+        <!-- 테스트 헤더 -->
+        <div class="test-header">
+            <h1 class="test-title">감정지능(EQ) 검사</h1>
+            <p class="test-subtitle">자신의 감정을 인식하고 관리하는 능력을 측정해보세요</p>
+        </div>
+
+        <div class="test-container">
+            <!-- 진행률 표시 -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <!-- 질문 섹션 -->
+            <div id="questionSection" class="question-container">
+                <div class="question-number" id="questionNumber">1</div>
+                <div class="question-text" id="questionText">질문이 로드되는 중...</div>
+                <div class="answer-options" id="answerOptions">
+                    <!-- 답변 옵션들이 여기에 동적으로 생성됩니다 -->
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-outline" id="prevButton" onclick="previousQuestion()" style="display: none;">이전</button>
+                    <button class="btn" id="nextButton" onclick="nextQuestion()" disabled>다음</button>
+                </div>
+            </div>
+
+            <!-- 결과 섹션 (숨김) -->
+            <div id="resultSection" class="result-container" style="display: none;">
+                <h2 class="result-title">검사 결과</h2>
+                <div class="eq-score" id="eqScore">85점</div>
+                <div class="eq-description" id="eqDescription">
+                    당신의 감정지능은 높은 수준입니다!
+                </div>
+                <div class="eq-areas" id="eqAreas">
+                    <!-- 감정지능 영역들이 여기에 표시됩니다 -->
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-outline" onclick="restartTest()">다시 검사하기</button>
+                    <button class="btn btn-success" onclick="saveResult()">결과 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // EQ 검사 데이터
+        const eqQuestions = [
+            {
+                question: "다른 사람의 표정을 보고 그 사람의 감정을 잘 파악할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다", 
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정이 변할 때 그 이유를 명확히 알 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다", 
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "스트레스를 받을 때 스스로를 진정시킬 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다", 
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 입장에서 생각해볼 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "갈등 상황에서 상대방의 감정을 고려한다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정이 다른 사람에게 미치는 영향을 고려한다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "어려운 상황에서도 긍정적인 마음을 유지할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 말을 진심으로 들어준다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정을 적절한 방식으로 표현할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정에 공감할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "감정적인 상황에서도 합리적으로 판단할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 기분을 좋게 만들어줄 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정을 조절하여 목표를 달성할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람과의 관계에서 신뢰를 쌓을 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "어려운 대화를 할 때도 상대방을 존중한다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정이 업무나 학습에 미치는 영향을 관리할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정을 이해하고 적절히 반응할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "감정적인 충돌을 건설적으로 해결할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정을 다른 사람에게 명확히 전달할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정에 민감하게 반응할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "감정적인 상황에서도 차분함을 유지할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정을 존중하고 받아들인다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정을 긍정적으로 활용할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람과의 관계에서 조화를 이룰 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "감정적인 문제를 해결할 때 창의적인 방법을 찾을 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정을 이해하기 위해 노력한다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "내 감정을 다른 사람에게 부담을 주지 않게 표현한다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "다른 사람의 감정에 적절히 공감할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            },
+            {
+                question: "감정적인 상황에서도 목표를 달성할 수 있다.",
+                options: [
+                    "매우 그렇다",
+                    "그렇다",
+                    "보통이다",
+                    "그렇지 않다",
+                    "전혀 그렇지 않다"
+                ]
+            }
+        ];
+
+        // 전역 변수
+        let currentQuestion = 0;
+        let answers = [];
+        let currentUser = null;
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTest();
+        });
+
+        // 테스트 초기화
+        async function initializeTest() {
+            try {
+                // 사용자 정보 확인
+                if (window.supabase && window.supabase.isLoggedIn()) {
+                    currentUser = await window.supabase.getCurrentUser();
+                    if (!currentUser) {
+                        redirectToLogin();
+                        return;
+                    }
+                } else {
+                    redirectToLogin();
+                    return;
+                }
+
+                // 첫 번째 질문 표시
+                showQuestion(0);
+            } catch (error) {
+                console.error('테스트 초기화 오류:', error);
+                redirectToLogin();
+            }
+        }
+
+        // 질문 표시
+        function showQuestion(questionIndex) {
+            const question = eqQuestions[questionIndex];
+            
+            document.getElementById('questionNumber').textContent = questionIndex + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // 답변 옵션 생성
+            const answerOptions = document.getElementById('answerOptions');
+            answerOptions.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(index);
+                answerOptions.appendChild(optionElement);
+            });
+            
+            // 이전 답변이 있으면 선택 상태 복원
+            if (answers[questionIndex] !== undefined) {
+                const selectedOption = answerOptions.children[answers[questionIndex]];
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+            }
+            
+            // 진행률 업데이트
+            updateProgress();
+            
+            // 네비게이션 버튼 상태 업데이트
+            updateNavigationButtons();
+        }
+
+        // 답변 선택
+        function selectAnswer(answerIndex) {
+            // 같은 질문의 다른 옵션들 해제
+            const answerOptions = document.querySelectorAll('.answer-option');
+            answerOptions.forEach(option => option.classList.remove('selected'));
+            
+            // 선택된 옵션 활성화
+            event.target.classList.add('selected');
+            
+            // 답변 저장
+            answers[currentQuestion] = answerIndex;
+            
+            // 다음 버튼 활성화
+            document.getElementById('nextButton').disabled = false;
+        }
+
+        // 다음 질문
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert('답변을 선택해주세요.');
+                return;
+            }
+            
+            if (currentQuestion < eqQuestions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                // 마지막 질문이면 결과 계산
+                calculateResult();
+            }
+        }
+
+        // 이전 질문
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / eqQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // 네비게이션 버튼 상태 업데이트
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            
+            prevButton.style.display = currentQuestion > 0 ? 'block' : 'none';
+            
+            if (currentQuestion === eqQuestions.length - 1) {
+                nextButton.textContent = '결과 보기';
+            } else {
+                nextButton.textContent = '다음';
+            }
+        }
+
+        // 결과 계산
+        function calculateResult() {
+            // 총 점수 계산 (1-5점 척도, 역문항 처리)
+            let totalScore = 0;
+            answers.forEach((answer, index) => {
+                // 5점 척도로 변환 (0-4 -> 1-5)
+                totalScore += answer + 1;
+            });
+            
+            // 최대 점수 대비 백분율 계산
+            const maxScore = eqQuestions.length * 5;
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            
+            // 결과 표시
+            showResult(totalScore, percentage);
+        }
+
+        // 결과 표시
+        function showResult(totalScore, percentage) {
+            document.getElementById('eqScore').textContent = totalScore + '점';
+            
+            let description = '';
+            let level = '';
+            
+            if (percentage >= 80) {
+                level = '높음';
+                description = '당신의 감정지능은 높은 수준입니다! 감정을 잘 인식하고 관리하며, 다른 사람과의 관계에서도 뛰어난 능력을 보입니다.';
+            } else if (percentage >= 60) {
+                level = '보통';
+                description = '당신의 감정지능은 보통 수준입니다. 몇 가지 영역에서 더 발전할 여지가 있습니다.';
+            } else {
+                level = '낮음';
+                description = '당신의 감정지능은 아직 발전할 여지가 많습니다. 감정 인식과 관리 능력을 향상시킬 수 있습니다.';
+            }
+            
+            document.getElementById('eqDescription').innerHTML = 
+                `${description}<br><small>점수: ${totalScore}점 (${percentage}%)</small>`;
+            
+            // 감정지능 영역 표시
+            const areasContainer = document.getElementById('eqAreas');
+            areasContainer.innerHTML = '';
+            
+            const areas = [
+                { title: '감정 인식', description: '자신과 타인의 감정을 정확히 파악하는 능력' },
+                { title: '감정 활용', description: '감정을 긍정적으로 활용하여 목표를 달성하는 능력' },
+                { title: '감정 이해', description: '감정의 원인과 결과를 이해하는 능력' },
+                { title: '감정 관리', description: '감정을 적절히 조절하고 관리하는 능력' }
+            ];
+            
+            areas.forEach(area => {
+                const areaCard = document.createElement('div');
+                areaCard.className = 'area-card';
+                areaCard.innerHTML = `
+                    <div class="area-title">${area.title}</div>
+                    <div class="area-description">${area.description}</div>
+                `;
+                areasContainer.appendChild(areaCard);
+            });
+            
+            // 질문 섹션 숨기고 결과 섹션 표시
+            document.getElementById('questionSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        // 결과 저장
+        async function saveResult() {
+            try {
+                if (window.supabase && currentUser) {
+                    const totalScore = answers.reduce((sum, answer) => sum + answer + 1, 0);
+                    const percentage = Math.round((totalScore / (eqQuestions.length * 5)) * 100);
+                    
+                    const resultData = {
+                        score: totalScore,
+                        percentage: percentage,
+                        description: document.getElementById('eqDescription').textContent
+                    };
+                    
+                    await window.supabase.createTestResult({
+                        user_id: currentUser.id,
+                        test_type: 'EQ',
+                        result_data: JSON.stringify(resultData),
+                        score_data: JSON.stringify(answers)
+                    });
+                    
+                    alert('검사 결과가 저장되었습니다!');
+                    window.location.href = 'test_selection.html';
+                } else {
+                    alert('로그인이 필요합니다.');
+                    redirectToLogin();
+                }
+            } catch (error) {
+                console.error('결과 저장 오류:', error);
+                alert('결과 저장 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 테스트 다시 시작
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('questionSection').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            showQuestion(0);
+        }
+
+        // 로그아웃
+        function logout() {
+            if (window.supabase) {
+                window.supabase.removeToken();
+            }
+            window.location.href = 'index.html';
+        }
+
+        // 로그인 페이지로 리다이렉트
+        function redirectToLogin() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

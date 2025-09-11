@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리더십 스타일 검사 - 청년들 성격유형 검사 시스템</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 리더십 검사 전용 스타일 */
+        .test-header {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .test-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            background: #ffd43b;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .answer-option:hover {
+            border-color: #ffd43b;
+            background: #fffbf0;
+        }
+
+        .answer-option.selected {
+            border-color: #ffd43b;
+            background: #ffd43b;
+            color: white;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ffd43b;
+            color: #ffd43b;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #ffd43b;
+            color: white;
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .leadership-type {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd43b;
+            margin-bottom: 20px;
+        }
+
+        .leadership-description {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .leadership-traits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .trait-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .trait-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .trait-description {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .test-title {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="main-header">
+            <a href="test_selection.html" class="logo">
+                <div class="logo-icon">👑</div>
+                <span class="logo-text">리더십 검사</span>
+            </a>
+            <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+        </div>
+
+        <!-- 테스트 헤더 -->
+        <div class="test-header">
+            <h1 class="test-title">리더십 스타일 검사</h1>
+            <p class="test-subtitle">자신의 리더십 스타일을 파악하고 효과적인 리더가 되세요</p>
+        </div>
+
+        <div class="test-container">
+            <!-- 진행률 표시 -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <!-- 질문 섹션 -->
+            <div id="questionSection" class="question-container">
+                <div class="question-number" id="questionNumber">1</div>
+                <div class="question-text" id="questionText">질문이 로드되는 중...</div>
+                <div class="answer-options" id="answerOptions">
+                    <!-- 답변 옵션들이 여기에 동적으로 생성됩니다 -->
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-outline" id="prevButton" onclick="previousQuestion()" style="display: none;">이전</button>
+                    <button class="btn" id="nextButton" onclick="nextQuestion()" disabled>다음</button>
+                </div>
+            </div>
+
+            <!-- 결과 섹션 (숨김) -->
+            <div id="resultSection" class="result-container" style="display: none;">
+                <h2 class="result-title">검사 결과</h2>
+                <div class="leadership-type" id="leadershipType">변혁적 리더</div>
+                <div class="leadership-description" id="leadershipDescription">
+                    당신은 변혁적 리더십 스타일을 가지고 있습니다.
+                </div>
+                <div class="leadership-traits" id="leadershipTraits">
+                    <!-- 리더십 특성들이 여기에 표시됩니다 -->
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-outline" onclick="restartTest()">다시 검사하기</button>
+                    <button class="btn btn-success" onclick="saveResult()">결과 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // 리더십 검사 데이터 (간단한 버전)
+        const leadershipQuestions = [
+            {
+                question: "팀의 목표를 설정할 때 나는",
+                options: [
+                    "팀원들과 함께 논의하여 결정한다",
+                    "내가 직접 설정하고 팀원들에게 전달한다",
+                    "팀원들의 의견을 듣되 최종 결정은 내가 한다",
+                    "팀원들이 자율적으로 설정하도록 한다"
+                ]
+            },
+            {
+                question: "팀원이 실수를 했을 때 나는",
+                options: [
+                    "실수의 원인을 분석하고 개선 방법을 함께 찾는다",
+                    "즉시 지적하고 올바른 방법을 알려준다",
+                    "팀원이 스스로 깨닫도록 기다린다",
+                    "실수를 통해 배울 수 있도록 격려한다"
+                ]
+            },
+            {
+                question: "새로운 프로젝트를 시작할 때 나는",
+                options: [
+                    "팀원들과 함께 계획을 세운다",
+                    "명확한 지침과 역할을 제시한다",
+                    "팀원들이 자율적으로 계획하도록 한다",
+                    "단계별로 가이드를 제공한다"
+                ]
+            },
+            {
+                question: "팀원과의 의견 충돌이 있을 때 나는",
+                options: [
+                    "양쪽 의견을 듣고 중재한다",
+                    "내 판단에 따라 결정한다",
+                    "팀원들이 스스로 해결하도록 한다",
+                    "객관적 기준으로 판단한다"
+                ]
+            },
+            {
+                question: "팀원의 성과를 평가할 때 나는",
+                options: [
+                    "과정과 결과를 모두 고려한다",
+                    "결과 중심으로 평가한다",
+                    "팀원의 노력과 성장을 중시한다",
+                    "팀 전체의 성과를 기준으로 한다"
+                ]
+            },
+            {
+                question: "변화가 필요할 때 나는",
+                options: [
+                    "팀원들과 변화의 필요성을 공유한다",
+                    "변화를 강력하게 추진한다",
+                    "팀원들이 변화를 받아들이도록 유도한다",
+                    "점진적으로 변화를 이끌어낸다"
+                ]
+            },
+            {
+                question: "팀원의 동기부여를 위해 나는",
+                options: [
+                    "개인의 목표와 팀 목표를 연결한다",
+                    "명확한 보상과 처벌을 제시한다",
+                    "팀원들의 자율성을 존중한다",
+                    "지속적인 피드백을 제공한다"
+                ]
+            },
+            {
+                question: "의사결정을 내릴 때 나는",
+                options: [
+                    "팀원들의 의견을 수렴하여 결정한다",
+                    "빠르고 확신에 찬 결정을 내린다",
+                    "팀원들이 결정하도록 한다",
+                    "데이터와 분석을 바탕으로 결정한다"
+                ]
+            },
+            {
+                question: "팀원의 개발을 위해 나는",
+                options: [
+                    "개인별 맞춤형 개발 계획을 세운다",
+                    "표준화된 교육 프로그램을 제공한다",
+                    "팀원들이 스스로 학습하도록 한다",
+                    "실무 경험을 통해 성장하도록 한다"
+                ]
+            },
+            {
+                question: "팀의 문제를 해결할 때 나는",
+                options: [
+                    "팀원들과 함께 해결책을 찾는다",
+                    "문제의 원인을 파악하고 직접 해결한다",
+                    "팀원들이 스스로 해결하도록 한다",
+                    "체계적인 접근 방법을 제시한다"
+                ]
+            }
+        ];
+
+        // 리더십 스타일별 설명
+        const leadershipStyles = {
+            'transformational': {
+                name: '변혁적 리더',
+                description: '팀원들의 잠재력을 이끌어내고 변화를 주도하는 리더십 스타일입니다.',
+                traits: [
+                    { title: '강점', description: '비전 제시, 동기부여, 개인적 관심' },
+                    { title: '특징', description: '영감적, 비전적, 개인적 관심' },
+                    { title: '적합한 상황', description: '변화와 혁신이 필요한 때' },
+                    { title: '개발 방향', description: '비전 제시 능력 향상' }
+                ]
+            },
+            'transactional': {
+                name: '거래적 리더',
+                description: '명확한 목표와 보상을 통해 팀원들을 관리하는 리더십 스타일입니다.',
+                traits: [
+                    { title: '강점', description: '목표 설정, 성과 관리, 보상 체계' },
+                    { title: '특징', description: '체계적, 목표 지향적, 성과 중심' },
+                    { title: '적합한 상황', description: '안정적이고 예측 가능한 환경' },
+                    { title: '개발 방향', description: '인간관계 능력 향상' }
+                ]
+            },
+            'laissez-faire': {
+                name: '자유방임적 리더',
+                description: '팀원들에게 자율성을 주고 최소한의 개입을 하는 리더십 스타일입니다.',
+                traits: [
+                    { title: '강점', description: '자율성 존중, 창의성 발휘, 독립성' },
+                    { title: '특징', description: '자유로운, 비개입적, 신뢰 기반' },
+                    { title: '적합한 상황', description: '전문성이 높은 팀' },
+                    { title: '개발 방향', description: '지시와 가이드 능력 향상' }
+                ]
+            },
+            'situational': {
+                name: '상황적 리더',
+                description: '상황에 따라 다양한 리더십 스타일을 적용하는 유연한 리더십입니다.',
+                traits: [
+                    { title: '강점', description: '유연성, 적응력, 상황 판단' },
+                    { title: '특징', description: '적응적, 유연한, 상황 중심' },
+                    { title: '적합한 상황', description: '다양하고 복잡한 환경' },
+                    { title: '개발 방향', description: '다양한 스타일 숙련도 향상' }
+                ]
+            }
+        };
+
+        // 전역 변수
+        let currentQuestion = 0;
+        let answers = [];
+        let currentUser = null;
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTest();
+        });
+
+        // 테스트 초기화
+        async function initializeTest() {
+            try {
+                // 사용자 정보 확인
+                if (window.supabase && window.supabase.isLoggedIn()) {
+                    currentUser = await window.supabase.getCurrentUser();
+                    if (!currentUser) {
+                        redirectToLogin();
+                        return;
+                    }
+                } else {
+                    redirectToLogin();
+                    return;
+                }
+
+                // 첫 번째 질문 표시
+                showQuestion(0);
+            } catch (error) {
+                console.error('테스트 초기화 오류:', error);
+                redirectToLogin();
+            }
+        }
+
+        // 질문 표시
+        function showQuestion(questionIndex) {
+            const question = leadershipQuestions[questionIndex];
+            
+            document.getElementById('questionNumber').textContent = questionIndex + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // 답변 옵션 생성
+            const answerOptions = document.getElementById('answerOptions');
+            answerOptions.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(index);
+                answerOptions.appendChild(optionElement);
+            });
+            
+            // 이전 답변이 있으면 선택 상태 복원
+            if (answers[questionIndex] !== undefined) {
+                const selectedOption = answerOptions.children[answers[questionIndex]];
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+            }
+            
+            // 진행률 업데이트
+            updateProgress();
+            
+            // 네비게이션 버튼 상태 업데이트
+            updateNavigationButtons();
+        }
+
+        // 답변 선택
+        function selectAnswer(answerIndex) {
+            // 같은 질문의 다른 옵션들 해제
+            const answerOptions = document.querySelectorAll('.answer-option');
+            answerOptions.forEach(option => option.classList.remove('selected'));
+            
+            // 선택된 옵션 활성화
+            event.target.classList.add('selected');
+            
+            // 답변 저장
+            answers[currentQuestion] = answerIndex;
+            
+            // 다음 버튼 활성화
+            document.getElementById('nextButton').disabled = false;
+        }
+
+        // 다음 질문
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert('답변을 선택해주세요.');
+                return;
+            }
+            
+            if (currentQuestion < leadershipQuestions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                // 마지막 질문이면 결과 계산
+                calculateResult();
+            }
+        }
+
+        // 이전 질문
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / leadershipQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // 네비게이션 버튼 상태 업데이트
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            
+            prevButton.style.display = currentQuestion > 0 ? 'block' : 'none';
+            
+            if (currentQuestion === leadershipQuestions.length - 1) {
+                nextButton.textContent = '결과 보기';
+            } else {
+                nextButton.textContent = '다음';
+            }
+        }
+
+        // 결과 계산
+        function calculateResult() {
+            // 각 리더십 스타일별 점수 계산
+            const scores = {
+                transformational: 0,
+                transactional: 0,
+                laissez_faire: 0,
+                situational: 0
+            };
+            
+            // 답변에 따라 점수 계산 (간단한 로직)
+            answers.forEach((answer, index) => {
+                if (answer === 0) scores.transformational += 1;
+                else if (answer === 1) scores.transactional += 1;
+                else if (answer === 2) scores.laissez_faire += 1;
+                else if (answer === 3) scores.situational += 1;
+            });
+            
+            // 가장 높은 점수의 스타일 찾기
+            const maxScore = Math.max(...Object.values(scores));
+            const leadershipType = Object.keys(scores).find(key => scores[key] === maxScore);
+            
+            // 결과 표시
+            showResult(leadershipType, scores);
+        }
+
+        // 결과 표시
+        function showResult(leadershipType, scores) {
+            const styleInfo = leadershipStyles[leadershipType];
+            
+            document.getElementById('leadershipType').textContent = styleInfo.name;
+            document.getElementById('leadershipDescription').innerHTML = 
+                `${styleInfo.description}<br><small>점수: ${scores[leadershipType]}점</small>`;
+            
+            // 리더십 특성 표시
+            const traitsContainer = document.getElementById('leadershipTraits');
+            traitsContainer.innerHTML = '';
+            
+            styleInfo.traits.forEach(trait => {
+                const traitCard = document.createElement('div');
+                traitCard.className = 'trait-card';
+                traitCard.innerHTML = `
+                    <div class="trait-title">${trait.title}</div>
+                    <div class="trait-description">${trait.description}</div>
+                `;
+                traitsContainer.appendChild(traitCard);
+            });
+            
+            // 질문 섹션 숨기고 결과 섹션 표시
+            document.getElementById('questionSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        // 결과 저장
+        async function saveResult() {
+            try {
+                if (window.supabase && currentUser) {
+                    const leadershipTypeElement = document.getElementById('leadershipType');
+                    const resultData = {
+                        type: leadershipTypeElement.textContent,
+                        description: document.getElementById('leadershipDescription').textContent
+                    };
+                    
+                    await window.supabase.createTestResult({
+                        user_id: currentUser.id,
+                        test_type: 'Leadership',
+                        result_data: JSON.stringify(resultData),
+                        score_data: JSON.stringify(answers)
+                    });
+                    
+                    alert('검사 결과가 저장되었습니다!');
+                    window.location.href = 'test_selection.html';
+                } else {
+                    alert('로그인이 필요합니다.');
+                    redirectToLogin();
+                }
+            } catch (error) {
+                console.error('결과 저장 오류:', error);
+                alert('결과 저장 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 테스트 다시 시작
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('questionSection').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            showQuestion(0);
+        }
+
+        // 로그아웃
+        function logout() {
+            if (window.supabase) {
+                window.supabase.removeToken();
+            }
+            window.location.href = 'index.html';
+        }
+
+        // 로그인 페이지로 리다이렉트
+        function redirectToLogin() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

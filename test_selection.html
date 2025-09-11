@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검사 선택 - 청년들 성격유형 검사 시스템</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 검사 선택 페이지 전용 스타일 */
+        .test-selection-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .test-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .test-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .test-description {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .test-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .test-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .test-detail-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .test-detail-value {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .test-button {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .completion-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .progress-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .progress-stat {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .progress-stat-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .back-button {
+            background: var(--text-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background: var(--dark-color);
+            transform: translateY(-2px);
+        }
+
+        .recommendation-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .recommendation-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-button {
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .test-card {
+                padding: 20px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="main-header">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🧠</div>
+                <span class="logo-text">성격유형검사</span>
+            </a>
+            <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="test-selection-container">
+            <!-- 환영 섹션 -->
+            <div class="welcome-section">
+                <h1 class="welcome-title">안녕하세요, <span id="userName">사용자</span>님!</h1>
+                <p class="welcome-subtitle">다양한 심리 검사를 통해 자신을 더 잘 알아보세요</p>
+            </div>
+
+            <!-- 추천 검사 섹션 -->
+            <div class="recommendation-section">
+                <h2 class="recommendation-title">🎯 추천 검사</h2>
+                <p class="recommendation-text">처음이시라면 MBTI 성격유형 검사부터 시작해보세요!</p>
+                <button class="recommendation-button" onclick="startTest('mbti')">MBTI 검사 시작하기</button>
+            </div>
+
+            <!-- 진행 상황 섹션 -->
+            <div class="progress-section">
+                <h2 class="progress-title">📊 나의 검사 진행 상황</h2>
+                <div class="progress-stats">
+                    <div class="progress-stat">
+                        <div class="progress-stat-number" id="completedTests">0</div>
+                        <div class="progress-stat-label">완료한 검사</div>
+                    </div>
+                    <div class="progress-stat">
+                        <div class="progress-stat-number" id="totalTests">5</div>
+                        <div class="progress-stat-label">전체 검사</div>
+                    </div>
+                    <div class="progress-stat">
+                        <div class="progress-stat-number" id="completionRate">0%</div>
+                        <div class="progress-stat-label">완료율</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 검사 선택 그리드 -->
+            <div class="test-grid">
+                <!-- MBTI 성격유형 검사 -->
+                <div class="test-card" data-test="mbti">
+                    <div class="test-icon">🧠</div>
+                    <h3 class="test-title">MBTI 성격유형 검사</h3>
+                    <p class="test-description">
+                        자신의 성격 유형을 파악하고, 강점과 약점을 알아보는 가장 기본적인 검사입니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">10-15분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">16문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">쉬움</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('mbti')">검사 시작</button>
+                </div>
+
+                <!-- DiSC 행동유형 검사 -->
+                <div class="test-card" data-test="disc">
+                    <div class="test-icon">📊</div>
+                    <h3 class="test-title">DiSC 행동유형 검사</h3>
+                    <p class="test-description">
+                        자신의 행동 스타일과 의사소통 방식을 분석하여 업무와 인간관계에 도움을 줍니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">15-20분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">24문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">보통</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('disc')">검사 시작</button>
+                </div>
+
+                <!-- 스트레스 검사 -->
+                <div class="test-card" data-test="stress">
+                    <div class="test-icon">😰</div>
+                    <h3 class="test-title">스트레스 검사</h3>
+                    <p class="test-description">
+                        현재 스트레스 수준을 측정하고 스트레스 관리 방법을 제안해드립니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">8-12분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">20문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">쉬움</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('stress')">검사 시작</button>
+                </div>
+
+                <!-- 감정지능(EQ) 검사 -->
+                <div class="test-card" data-test="eq">
+                    <div class="test-icon">💝</div>
+                    <h3 class="test-title">감정지능(EQ) 검사</h3>
+                    <p class="test-description">
+                        자신의 감정을 인식하고 관리하는 능력을 측정하여 감정지능을 향상시킬 수 있습니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">12-18분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">30문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">보통</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('eq')">검사 시작</button>
+                </div>
+
+                <!-- 리더십 스타일 검사 -->
+                <div class="test-card" data-test="leadership">
+                    <div class="test-icon">👑</div>
+                    <h3 class="test-title">리더십 스타일 검사</h3>
+                    <p class="test-description">
+                        자신의 리더십 스타일을 파악하고 효과적인 리더가 되기 위한 방향을 제시합니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">20-25분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">40문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">어려움</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('leadership')">검사 시작</button>
+                </div>
+
+                <!-- 직업적성 검사 -->
+                <div class="test-card" data-test="career">
+                    <div class="test-icon">💼</div>
+                    <h3 class="test-title">직업적성 검사</h3>
+                    <p class="test-description">
+                        자신에게 맞는 직업과 진로 방향을 찾아보는 종합적인 적성 검사입니다.
+                    </p>
+                    <div class="test-details">
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">소요시간</span>
+                            <span class="test-detail-value">25-30분</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">문항수</span>
+                            <span class="test-detail-value">50문항</span>
+                        </div>
+                        <div class="test-detail-item">
+                            <span class="test-detail-label">난이도</span>
+                            <span class="test-detail-value">어려움</span>
+                        </div>
+                    </div>
+                    <button class="test-button" onclick="startTest('career')">검사 시작</button>
+                </div>
+            </div>
+
+            <!-- 네비게이션 버튼 -->
+            <div class="navigation-buttons">
+                <a href="index.html" class="back-button">← 메인으로 돌아가기</a>
+                <div>
+                    <button class="btn btn-secondary" onclick="viewResults()">검사 결과 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // 전역 변수
+        let currentUser = null;
+        let completedTests = [];
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePage();
+        });
+
+        // 페이지 초기화
+        async function initializePage() {
+            try {
+                // 사용자 정보 확인
+                if (window.supabase && window.supabase.isLoggedIn()) {
+                    currentUser = await window.supabase.getCurrentUser();
+                    if (currentUser) {
+                        updateUserInfo();
+                        loadCompletedTests();
+                    } else {
+                        redirectToLogin();
+                    }
+                } else {
+                    redirectToLogin();
+                }
+            } catch (error) {
+                console.error('페이지 초기화 오류:', error);
+                redirectToLogin();
+            }
+        }
+
+        // 사용자 정보 업데이트
+        function updateUserInfo() {
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement && currentUser) {
+                userNameElement.textContent = currentUser.name || currentUser.username;
+            }
+        }
+
+        // 완료된 검사 로드
+        async function loadCompletedTests() {
+            try {
+                if (window.supabase) {
+                    const results = await window.supabase.getTestResults(currentUser.id);
+                    completedTests = results || [];
+                    updateProgressStats();
+                    updateTestCards();
+                }
+            } catch (error) {
+                console.error('완료된 검사 로드 오류:', error);
+            }
+        }
+
+        // 진행 상황 통계 업데이트
+        function updateProgressStats() {
+            const completedCount = completedTests.length;
+            const totalCount = 6; // 전체 검사 수
+            const completionRate = Math.round((completedCount / totalCount) * 100);
+
+            document.getElementById('completedTests').textContent = completedCount;
+            document.getElementById('totalTests').textContent = totalCount;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+        }
+
+        // 검사 카드 업데이트
+        function updateTestCards() {
+            const testCards = document.querySelectorAll('.test-card');
+            testCards.forEach(card => {
+                const testType = card.dataset.test;
+                const isCompleted = completedTests.some(test => test.test_type === testType);
+                
+                if (isCompleted) {
+                    // 완료 배지 추가
+                    if (!card.querySelector('.completion-badge')) {
+                        const badge = document.createElement('div');
+                        badge.className = 'completion-badge';
+                        badge.textContent = '완료';
+                        card.appendChild(badge);
+                    }
+                    
+                    // 버튼 텍스트 변경
+                    const button = card.querySelector('.test-button');
+                    button.textContent = '다시 검사하기';
+                    button.style.background = 'linear-gradient(135deg, #51cf66 0%, #40c057 100%)';
+                }
+            });
+        }
+
+        // 검사 시작
+        function startTest(testType) {
+            // 검사 타입에 따른 페이지로 이동
+            switch(testType) {
+                case 'mbti':
+                    window.location.href = 'index.php';
+                    break;
+                case 'disc':
+                    window.location.href = `test_disc.html?type=${testType}`;
+                    break;
+                case 'stress':
+                    window.location.href = `test_stress.html?type=${testType}`;
+                    break;
+                case 'eq':
+                    window.location.href = `test_eq.html?type=${testType}`;
+                    break;
+                case 'leadership':
+                    window.location.href = `test_leadership.html?type=${testType}`;
+                    break;
+                case 'career':
+                    window.location.href = `test_career.html?type=${testType}`;
+                    break;
+                default:
+                    alert('준비 중인 검사입니다.');
+            }
+        }
+
+        // 검사 결과 보기
+        function viewResults() {
+            window.location.href = 'results.html';
+        }
+
+        // 로그아웃
+        function logout() {
+            if (window.supabase) {
+                window.supabase.removeToken();
+            }
+            window.location.href = 'index.html';
+        }
+
+        // 로그인 페이지로 리다이렉트
+        function redirectToLogin() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
