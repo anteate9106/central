@@ -470,7 +470,6 @@
                 <a href="index.html" class="back-button">← 메인으로 돌아가기</a>
                 <div>
                     <button class="btn btn-secondary" onclick="viewResults()">검사 결과 보기</button>
-                    <button class="btn btn-warning" onclick="testDirectAccess()" style="margin-left: 10px;">MBTI 직접 테스트</button>
                 </div>
             </div>
         </div>
@@ -605,12 +604,6 @@
             window.location.href = 'results.html';
         }
 
-        // 직접 접근 테스트
-        function testDirectAccess() {
-            console.log('직접 접근 테스트 시작');
-            alert('MBTI 페이지로 직접 이동합니다.');
-            window.location.href = 'test_mbti.html';
-        }
 
         // 로그아웃
         function logout() {
