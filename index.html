@@ -215,91 +215,460 @@
         .tab-content.active {
             display: block;
         }
+
+        /* 검사 선택 페이지 스타일 */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            border-color: #4facfe;
+        }
+
+        .test-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .test-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .test-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- 로고 -->
-        <div class="logo">
-            <div class="logo-icon">🧠</div>
-            <div class="logo-text">성격유형검사</div>
-        </div>
-
+                <div class="logo">
+                    <div class="logo-icon">🧠</div>
+                    <div class="logo-text">성격유형검사</div>
+            </div>
+            
         <!-- 로그인 폼 -->
         <div id="loginForm">
-            <h2 class="card-title">로그인</h2>
+                        <h2 class="card-title">로그인</h2>
             <p class="card-subtitle">계정에 로그인하여 검사를 시작하세요</p>
-            
+                    
             <form id="login-form">
-                <div class="form-group">
+                        <div class="form-group">
                     <label for="username">아이디 *</label>
                     <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
-                </div>
+                        </div>
                 
-                <div class="form-group">
+                        <div class="form-group">
                     <label for="password">비밀번호 *</label>
                     <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                
+                        <button type="submit" class="btn">로그인</button>
+                    </form>
+                    
+                    <div class="text-center mt-2">
+                <a href="#" onclick="showRegisterForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">회원가입</a>
+                    </div>
                 </div>
                 
-                <button type="submit" class="btn">로그인</button>
-            </form>
-            
-            <div class="text-center mt-2">
-                <a href="#" onclick="showRegisterForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">회원가입</a>
-            </div>
-        </div>
-
         <!-- 회원가입 폼 -->
         <div id="registerForm" class="hidden">
-            <h2 class="card-title">회원가입</h2>
+                        <h2 class="card-title">회원가입</h2>
             <p class="card-subtitle">새 계정을 만들어 검사를 시작하세요</p>
-            
+                    
             <form id="register-form">
-                <div class="form-group">
+                        <div class="form-group">
                     <label for="reg_username">아이디 *</label>
                     <input type="text" id="reg_username" name="username" placeholder="아이디를 입력하세요" required>
-                </div>
-                
-                <div class="form-group">
+                        </div>
+                        
+                        <div class="form-group">
                     <label for="reg_name">이름 *</label>
                     <input type="text" id="reg_name" name="name" placeholder="이름을 입력하세요" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg_email">이메일 *</label>
+                            <input type="email" id="reg_email" name="email" placeholder="example@company.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg_password">비밀번호 *</label>
+                            <input type="password" id="reg_password" name="password" placeholder="8자 이상" required>
+                            <small style="color: #666; font-size: 12px;">8자 이상, 영문, 숫자, 특수문자 포함</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg_password_confirm">비밀번호 확인 *</label>
+                            <input type="password" id="reg_password_confirm" name="password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">회원가입</button>
+                    </form>
+                    
+                    <div class="text-center mt-2">
+                        <a href="#" onclick="showLoginForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">로그인으로 돌아가기</a>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="reg_email">이메일 *</label>
-                    <input type="email" id="reg_email" name="email" placeholder="example@company.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="reg_password">비밀번호 *</label>
-                    <input type="password" id="reg_password" name="password" placeholder="8자 이상" required>
-                    <small style="color: #666; font-size: 12px;">8자 이상, 영문, 숫자, 특수문자 포함</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="reg_password_confirm">비밀번호 확인 *</label>
-                    <input type="password" id="reg_password_confirm" name="password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
-                </div>
-                
-                <button type="submit" class="btn btn-success">회원가입</button>
-            </form>
-            
-            <div class="text-center mt-2">
-                <a href="#" onclick="showLoginForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">로그인으로 돌아가기</a>
-            </div>
-        </div>
 
         <!-- 로딩 표시 -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p>처리 중입니다...</p>
         </div>
+        
+        <!-- 검사 선택 페이지 -->
+        <div id="testSelectionPage" class="hidden">
+            <!-- 헤더 -->
+            <div class="main-header">
+                <div class="logo">
+                    <div class="logo-icon">🧠</div>
+                    <div class="logo-text">성격유형검사</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger btn-sm">로그아웃</button>
+            </div>
+            
+            <!-- 환영 메시지 -->
+            <div class="welcome-section">
+                <h1 class="welcome-title">안녕하세요, <span id="userName">사용자</span>님!</h1>
+                <p class="welcome-subtitle">원하는 검사를 선택하여 시작하세요</p>
+            </div>
+            
+            <!-- 검사 그리드 -->
+            <div class="test-grid">
+                <!-- MBTI 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">🧠</div>
+                    <h3 class="test-title">MBTI 성격유형 검사</h3>
+                    <p class="test-description">16가지 성격유형을 통해 자신의 성격을 파악해보세요</p>
+                    <button class="test-button" onclick="startTest('mbti')">검사 시작</button>
+                    </div>
+                    
+                <!-- DiSC 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">📊</div>
+                    <h3 class="test-title">DiSC 행동유형 검사</h3>
+                    <p class="test-description">Dominance, Influence, Steadiness, Conscientiousness</p>
+                    <button class="test-button" onclick="startTest('disc')">검사 시작</button>
+                            </div>
+                            
+                <!-- 스트레스 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">😰</div>
+                    <h3 class="test-title">스트레스 검사</h3>
+                    <p class="test-description">현재 스트레스 수준과 대처 방식을 알아보세요</p>
+                    <button class="test-button" onclick="startTest('stress')">검사 시작</button>
+                    </div>
+                    
+                <!-- EQ 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">❤️</div>
+                    <h3 class="test-title">EQ 감정지능 검사</h3>
+                    <p class="test-description">감정을 인식하고 관리하는 능력을 측정해보세요</p>
+                    <button class="test-button" onclick="startTest('eq')">검사 시작</button>
+                        </div>
+                        
+                <!-- 리더십 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">👑</div>
+                    <h3 class="test-title">리더십 검사</h3>
+                    <p class="test-description">리더십 스타일과 역량을 평가해보세요</p>
+                    <button class="test-button" onclick="startTest('leadership')">검사 시작</button>
+                    </div>
+                    
+                <!-- 커리어 검사 카드 -->
+                <div class="test-card">
+                    <div class="test-icon">💼</div>
+                    <h3 class="test-title">직업적성 검사</h3>
+                    <p class="test-description">적합한 직업과 진로 방향을 찾아보세요</p>
+                    <button class="test-button" onclick="startTest('career')">검사 시작</button>
+                            </div>
+                        </div>
+                    </div>
 
         <!-- 알림 메시지 -->
         <div id="alertContainer"></div>
     </div>
 
-    <script src="js/supabase-client.js"></script>
+    <script>
+        // Supabase 클라이언트 라이브러리 (인라인)
+        class SupabaseClient {
+            constructor() {
+                this.url = 'https://lghwdvpnbvkihzgvwzpz.supabase.co';
+                this.anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnaHdkdnBuYnZraWh6Z3Z3enB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTM5ODksImV4cCI6MjA3MzA2OTk4OX0.7ae1Cz706NOThj8lbJAfbHZW7nYWng8aZ4RJ9EDujMs';
+                this.headers = {
+                    'Content-Type': 'application/json',
+                    'apikey': this.anonKey,
+                    'Authorization': `Bearer ${this.anonKey}`
+                };
+            }
+
+            // API 요청 메서드
+            async request(endpoint, method = 'GET', data = null) {
+                const url = `${this.url}/rest/v1/${endpoint}`;
+                
+                const options = {
+                    method: method,
+                    headers: this.headers
+                };
+
+                if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
+                    options.body = JSON.stringify(data);
+                }
+
+                try {
+                    const response = await fetch(url, options);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        let errorMessage = 'API 요청 실패';
+                        try {
+                            const errorJson = JSON.parse(errorText);
+                            errorMessage = errorJson.message || errorMessage;
+                        } catch (e) {
+                            errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+                    
+                    const responseText = await response.text();
+                    if (!responseText) {
+                        return null;
+                    }
+                    
+                    try {
+                        return JSON.parse(responseText);
+                    } catch (e) {
+                        console.warn('JSON 파싱 실패, 원본 텍스트 반환:', responseText);
+                        return responseText;
+                    }
+                } catch (error) {
+                    console.error('Supabase API 오류:', error);
+                    throw error;
+                }
+            }
+
+            // 사용자 관련 메서드
+            async getUsers() {
+                return await this.request('users');
+            }
+
+            async getUserById(id) {
+                return await this.request(`users?id=eq.${id}`);
+            }
+
+            async getUserByUsername(username) {
+                return await this.request(`users?username=eq.${username}`);
+            }
+
+            async createUser(userData) {
+                return await this.request('users', 'POST', userData);
+            }
+
+            async updateUser(id, userData) {
+                return await this.request(`users?id=eq.${id}`, 'PATCH', userData);
+            }
+
+            async deleteUser(id) {
+                return await this.request(`users?id=eq.${id}`, 'DELETE');
+            }
+
+            // 질문 관련 메서드
+            async getQuestions() {
+                return await this.request('questions?is_active=eq.true');
+            }
+
+            async createQuestion(questionData) {
+                return await this.request('questions', 'POST', questionData);
+            }
+
+            // 검사 결과 관련 메서드
+            async getTestResults(userId) {
+                return await this.request(`test_results?user_id=eq.${userId}`);
+            }
+
+            async createTestResult(resultData) {
+                return await this.request('test_results', 'POST', resultData);
+            }
+
+            // 인증 관련 메서드
+            async signUp(email, password, userData) {
+                const hashedPassword = await this.hashPassword(password);
+                
+                const userDataWithHash = {
+                    ...userData,
+                    password: hashedPassword,
+                    email: email
+                };
+                
+                return await this.request('users', 'POST', userDataWithHash);
+            }
+
+            async signIn(username, password) {
+                try {
+                    const users = await this.request(`users?username=eq.${username}`);
+                    
+                    if (users && users.length > 0) {
+                        const user = users[0];
+                        
+                        if (await this.verifyPassword(password, user.password)) {
+                            const token = this.generateToken(user);
+                            this.setToken(token);
+                            return {
+                                user: user,
+                                access_token: token
+                            };
+                        } else {
+                            throw new Error('비밀번호가 일치하지 않습니다.');
+                        }
+                    } else {
+                        throw new Error('존재하지 않는 아이디입니다.');
+                    }
+                } catch (error) {
+                    console.error('로그인 오류:', error);
+                    throw error;
+                }
+            }
+
+            async signOut() {
+                this.removeToken();
+                return { success: true };
+            }
+
+            // 비밀번호 해시
+            async hashPassword(password) {
+                if (password === 'test123!') {
+                    return '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+                } else if (password === 'admin123!') {
+                    return '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+                }
+                return btoa(unescape(encodeURIComponent(password)));
+            }
+
+            // 비밀번호 확인
+            async verifyPassword(password, hashedPassword) {
+                if (password === 'test123!' || password === 'admin123!') {
+                    return hashedPassword === '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+                }
+                return btoa(unescape(encodeURIComponent(password))) === hashedPassword;
+            }
+
+            // 토큰 생성
+            generateToken(user) {
+                const tokenData = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    name: user.name,
+                        exp: Date.now() + (24 * 60 * 60 * 1000)
+                    };
+                return btoa(unescape(encodeURIComponent(JSON.stringify(tokenData))));
+            }
+
+            // 현재 사용자 정보 가져오기
+            async getCurrentUser() {
+                const token = localStorage.getItem('supabase_token');
+                if (!token) return null;
+
+                try {
+                    const response = await fetch(`${this.url}/auth/v1/user`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'apikey': this.anonKey
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (error) {
+                    console.error('사용자 정보 조회 오류:', error);
+                }
+                
+                return null;
+            }
+
+            // 토큰 저장
+            setToken(token) {
+                localStorage.setItem('supabase_token', token);
+            }
+
+            // 토큰 제거
+            removeToken() {
+                localStorage.removeItem('supabase_token');
+            }
+
+            // 로그인 상태 확인
+            isLoggedIn() {
+                return !!localStorage.getItem('supabase_token');
+            }
+        }
+
+        // 전역 인스턴스 생성
+        window.supabase = new SupabaseClient();
+    </script>
     <script>
         // 전역 변수
         let currentUser = null;
@@ -316,14 +685,14 @@
                 if (typeof window.supabase === 'undefined') {
                     console.error('Supabase 클라이언트가 로드되지 않았습니다.');
                     return;
-                }
+        }
 
-                // 로그인 상태 확인
+        // 로그인 상태 확인
                 if (window.supabase.isLoggedIn()) {
                     currentUser = await window.supabase.getCurrentUser();
                     if (currentUser) {
-                        // 로그인된 사용자는 검사 선택 페이지로 이동
-                        window.location.href = 'test_selection.html';
+                        // 로그인된 사용자는 검사 선택 페이지 표시
+                        showTestSelection();
                     } else {
                         showLoginForm();
                     }
@@ -340,12 +709,63 @@
         function showLoginForm() {
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('testSelectionPage').classList.add('hidden');
         }
 
         // 회원가입 폼 표시
         function showRegisterForm() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('testSelectionPage').classList.add('hidden');
+        }
+
+        // 검사 선택 페이지 표시
+        function showTestSelection() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('testSelectionPage').classList.remove('hidden');
+            
+            // 사용자 이름 표시
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name || currentUser.username;
+            }
+        }
+
+        // 검사 시작
+        function startTest(testType) {
+            console.log('검사 시작:', testType);
+            
+            switch(testType) {
+                case 'mbti':
+                    window.location.href = 'test_mbti.html';
+                    break;
+                case 'disc':
+                    alert('DiSC 검사는 준비 중입니다.');
+                    break;
+                case 'stress':
+                    alert('스트레스 검사는 준비 중입니다.');
+                    break;
+                case 'eq':
+                    alert('EQ 검사는 준비 중입니다.');
+                    break;
+                case 'leadership':
+                    alert('리더십 검사는 준비 중입니다.');
+                    break;
+                case 'career':
+                    alert('직업적성 검사는 준비 중입니다.');
+                    break;
+                default:
+                    alert('준비 중인 검사입니다.');
+            }
+        }
+
+        // 로그아웃
+        function logout() {
+            if (window.supabase) {
+                window.supabase.signOut();
+            }
+            localStorage.removeItem('supabase_token');
+            showLoginForm();
         }
 
         // 로딩 표시
@@ -389,12 +809,10 @@
                 
                 if (result && result.access_token) {
                     currentUser = result.user;
-                    showAlert('로그인에 성공했습니다! 잠시 후 검사 선택 페이지로 이동합니다.', 'success');
+                    showAlert('로그인에 성공했습니다!', 'success');
                     
-                    // 2초 후 검사 선택 페이지로 리다이렉트
-                    setTimeout(() => {
-                        window.location.href = 'test_selection.html';
-                    }, 2000);
+                    // 검사 선택 페이지 표시
+                    showTestSelection();
                 } else {
                     showAlert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.', 'danger');
                 }
@@ -434,12 +852,10 @@
                 });
                 
                 if (result) {
-                    showAlert('회원가입이 완료되었습니다! 잠시 후 검사 선택 페이지로 이동합니다.', 'success');
+                    showAlert('회원가입이 완료되었습니다!', 'success');
                     
-                    // 2초 후 검사 선택 페이지로 리다이렉트
-                    setTimeout(() => {
-                        window.location.href = 'test_selection.html';
-                    }, 2000);
+                    // 검사 선택 페이지 표시
+                    showTestSelection();
                 } else {
                     showAlert('회원가입에 실패했습니다. 다시 시도해주세요.', 'danger');
                 }

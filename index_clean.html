@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청년들 성격유형 검사 시스템</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .card-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tab-container {
+            margin-top: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: #4facfe;
+            border-bottom-color: #4facfe;
+        }
+
+        .tab-button:hover {
+            color: #4facfe;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 로고 -->
+        <div class="logo">
+            <div class="logo-icon">🧠</div>
+            <div class="logo-text">성격유형검사</div>
+        </div>
+
+        <!-- 로그인 폼 -->
+        <div id="loginForm">
+            <h2 class="card-title">로그인</h2>
+            <p class="card-subtitle">계정에 로그인하여 검사를 시작하세요</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">아이디 *</label>
+                    <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">비밀번호 *</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                
+                <button type="submit" class="btn">로그인</button>
+            </form>
+            
+            <div class="text-center mt-2">
+                <a href="#" onclick="showRegisterForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">회원가입</a>
+            </div>
+        </div>
+
+        <!-- 회원가입 폼 -->
+        <div id="registerForm" class="hidden">
+            <h2 class="card-title">회원가입</h2>
+            <p class="card-subtitle">새 계정을 만들어 검사를 시작하세요</p>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg_username">아이디 *</label>
+                    <input type="text" id="reg_username" name="username" placeholder="아이디를 입력하세요" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg_name">이름 *</label>
+                    <input type="text" id="reg_name" name="name" placeholder="이름을 입력하세요" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg_email">이메일 *</label>
+                    <input type="email" id="reg_email" name="email" placeholder="example@company.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg_password">비밀번호 *</label>
+                    <input type="password" id="reg_password" name="password" placeholder="8자 이상" required>
+                    <small style="color: #666; font-size: 12px;">8자 이상, 영문, 숫자, 특수문자 포함</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg_password_confirm">비밀번호 확인 *</label>
+                    <input type="password" id="reg_password_confirm" name="password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
+                </div>
+                
+                <button type="submit" class="btn btn-success">회원가입</button>
+            </form>
+            
+            <div class="text-center mt-2">
+                <a href="#" onclick="showLoginForm()" style="color: #4facfe; text-decoration: none; font-size: 14px;">로그인으로 돌아가기</a>
+            </div>
+        </div>
+
+        <!-- 로딩 표시 -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>처리 중입니다...</p>
+        </div>
+
+        <!-- 알림 메시지 -->
+        <div id="alertContainer"></div>
+    </div>
+
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // 전역 변수
+        let currentUser = null;
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        // 앱 초기화
+        async function initializeApp() {
+            try {
+                // Supabase 클라이언트 로드 확인
+                if (typeof window.supabase === 'undefined') {
+                    console.error('Supabase 클라이언트가 로드되지 않았습니다.');
+                    return;
+                }
+
+                // 로그인 상태 확인
+                if (window.supabase.isLoggedIn()) {
+                    currentUser = await window.supabase.getCurrentUser();
+                    if (currentUser) {
+                        // 로그인된 사용자는 검사 선택 페이지로 이동
+                        window.location.href = 'test_selection.html';
+                    } else {
+                        showLoginForm();
+                    }
+                } else {
+                    showLoginForm();
+                }
+            } catch (error) {
+                console.error('앱 초기화 오류:', error);
+                showLoginForm();
+            }
+        }
+
+        // 로그인 폼 표시
+        function showLoginForm() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+        }
+
+        // 회원가입 폼 표시
+        function showRegisterForm() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        // 로딩 표시
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // 알림 표시
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertContainer.appendChild(alertDiv);
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 3000);
+        }
+
+        // 폼 이벤트 리스너 등록
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('register-form').addEventListener('submit', handleRegister);
+
+        // 로그인 처리
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const username = formData.get('username');
+            const password = formData.get('password');
+            
+            try {
+                showLoading(true);
+                
+                // Supabase를 통한 로그인
+                const result = await window.supabase.signIn(username, password);
+                
+                if (result && result.access_token) {
+                    currentUser = result.user;
+                    showAlert('로그인에 성공했습니다! 잠시 후 검사 선택 페이지로 이동합니다.', 'success');
+                    
+                    // 2초 후 검사 선택 페이지로 리다이렉트
+                    setTimeout(() => {
+                        window.location.href = 'test_selection.html';
+                    }, 2000);
+                } else {
+                    showAlert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.', 'danger');
+                }
+            } catch (error) {
+                console.error('로그인 오류:', error);
+                showAlert('로그인 중 오류가 발생했습니다: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 회원가입 처리
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = {
+                username: formData.get('username'),
+                password: formData.get('password'),
+                email: formData.get('email'),
+                name: formData.get('name')
+            };
+            
+            // 비밀번호 확인
+            if (userData.password !== formData.get('password_confirm')) {
+                showAlert('비밀번호가 일치하지 않습니다.', 'danger');
+                return;
+            }
+            
+            try {
+                showLoading(true);
+                
+                // Supabase를 통한 회원가입
+                const result = await window.supabase.signUp(userData.email, userData.password, {
+                    username: userData.username,
+                    name: userData.name
+                });
+                
+                if (result) {
+                    showAlert('회원가입이 완료되었습니다! 잠시 후 검사 선택 페이지로 이동합니다.', 'success');
+                    
+                    // 2초 후 검사 선택 페이지로 리다이렉트
+                    setTimeout(() => {
+                        window.location.href = 'test_selection.html';
+                    }, 2000);
+                } else {
+                    showAlert('회원가입에 실패했습니다. 다시 시도해주세요.', 'danger');
+                }
+            } catch (error) {
+                console.error('회원가입 오류:', error);
+                showAlert('회원가입 중 오류가 발생했습니다: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>
