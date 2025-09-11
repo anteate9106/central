@@ -1,7 +1,7 @@
 // Supabase 클라이언트 라이브러리
 class SupabaseClient {
     constructor() {
-        this.url = 'https://your-project-id.supabase.co';
+        this.url = 'https://lghwdvpnbvkihzgvwzpz.supabase.co';
         this.anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnaHdkdnBuYnZraWh6Z3Z3enB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTM5ODksImV4cCI6MjA3MzA2OTk4OX0.7ae1Cz706NOThj8lbJAfbHZW7nYWng8aZ4RJ9EDujMs';
         this.headers = {
             'Content-Type': 'application/json',
